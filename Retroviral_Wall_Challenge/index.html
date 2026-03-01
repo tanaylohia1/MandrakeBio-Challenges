@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>The Retroviral Wall | Mandrake Open Problems #1</title>
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="The Retroviral Wall | Mandrake Open Problems #1">
+    <meta name="description" content="Can you predict which reverse transcriptases work for prime editing without memorizing their evolutionary family? $1,000 prize. Submit by March 31, 2026.">
+    <meta name="keywords" content="prime editing, reverse transcriptase, machine learning challenge, bioinformatics, AI biology, Mandrake Bioworks, open science">
+    <meta name="author" content="Mandrake Bioworks">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://mandrakebio.com/Retroviral_Wall_Challenge/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mandrakebio.com/Retroviral_Wall_Challenge/">
+    <meta property="og:title" content="Mandrake Open Problems #1: The Retroviral Wall">
+    <meta property="og:description" content="Can you predict which reverse transcriptases work for prime editing without memorizing their evolutionary family? $1,000 prize.">
+    <meta property="og:image" content="https://mandrakebio.com/assets/Logo%20Gradient%202%20%5BPNG%5D.png">
+    <meta property="og:site_name" content="Mandrake Bioworks Challenges">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://mandrakebio.com/Retroviral_Wall_Challenge/">
+    <meta property="twitter:title" content="Mandrake Open Problems #1: The Retroviral Wall">
+    <meta property="twitter:description" content="Can you predict which reverse transcriptases work for prime editing without memorizing their evolutionary family? $1,000 prize.">
+    <meta property="twitter:image" content="https://mandrakebio.com/assets/Logo%20Gradient%202%20%5BPNG%5D.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/Dna Logo.PNG">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/Dna Logo.PNG">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/Dna Logo.PNG">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Three.js Import Map for Hero Animation -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../shared/challenges.css">
+
+    <style>
+        /* Hero Animation Styles */
+        .hero {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #hero-canvas-container {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .hero > *:not(#hero-canvas-container) {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Radial fade overlay for text readability */
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(15, 14, 29, 0.5) 0%, rgba(15, 14, 29, 0.8) 60%, rgba(15, 14, 29, 0.98) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Hero text visibility enhancements */
+        .hero h1 {
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8), 0 4px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero .hero-subtitle {
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero .hero-badge {
+            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Page-specific overrides */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(144, 220, 216, 0.1) 0%, rgba(74, 124, 140, 0.05) 100%);
+            border-left: 3px solid var(--accent-cyan);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .baseline-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            color: var(--warning-orange);
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .who-we-are-content {
+            font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+            line-height: 1.8;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .challenge-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .challenge-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .challenge-card h4 {
+            color: var(--accent-cyan);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .challenge-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Logo Carousel Styles */
+        .logo-carousel-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 1.5rem 0;
+        }
+
+        .logo-carousel-wrapper::before,
+        .logo-carousel-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 80px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .logo-carousel-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, var(--bg-dark) 0%, transparent 100%);
+        }
+
+        .logo-carousel-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, var(--bg-dark) 0%, transparent 100%);
+        }
+
+        .logo-carousel {
+            display: flex;
+            animation: scroll-logos 25s linear infinite;
+            width: max-content;
+        }
+
+        .logo-carousel:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll-logos {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .logo-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 16px;
+            padding: 1.25rem 2rem;
+            margin: 0 1rem;
+            min-width: 200px;
+            height: 100px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .logo-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(144, 220, 216, 0.3);
+        }
+
+        .logo-item img {
+            max-height: 70px;
+            max-width: 170px;
+            object-fit: contain;
+            filter: none;
+        }
+
+        /* Static logo grid for teams (no carousel) */
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            padding: 2rem 0;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .logo-grid .logo-item {
+            width: 100%;
+            height: 100px;
+            padding: 1.25rem 2rem;
+            margin: 0;
+        }
+
+        .logo-grid .logo-item img {
+            max-height: 70px;
+            max-width: 170px;
+        }
+
+        @media (max-width: 768px) {
+            .logo-item {
+                min-width: 150px;
+                height: 80px;
+                padding: 1rem 1.25rem;
+            }
+
+            .logo-item img {
+                max-height: 50px;
+                max-width: 120px;
+            }
+
+            .logo-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .logo-grid .logo-item {
+                height: 80px;
+            }
+
+            .logo-grid .logo-item img {
+                max-height: 50px;
+                max-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "Mandrake Open Problems #1: The Retroviral Wall",
+        "description": "Machine learning challenge to predict reverse transcriptase activity for prime editing",
+        "startDate": "2026-01-01",
+        "endDate": "2026-03-31",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+        "location": {
+            "@type": "VirtualLocation",
+            "url": "https://mandrakebio.com/Retroviral_Wall_Challenge/"
+        },
+        "organizer": {
+            "@type": "Organization",
+            "name": "Mandrake Bioworks",
+            "url": "https://mandrakebioworks.com"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+        }
+    }
+    </script>
+
+    <!-- Navigation -->
+    <nav class="nav-header">
+        <a href="https://mandrakebioworks.com" class="nav-logo">
+            <img src="../assets/Logo Gradient 2 [PNG].png" alt="Mandrake Bioworks">
+        </a>
+        <div class="nav-links">
+            <a href="#challenge" class="nav-link">Challenge</a>
+            <a href="#prizes" class="nav-link">Prizes</a>
+            <a href="#how-it-works" class="nav-link">How It Works</a>
+            <a href="#faq" class="nav-link">FAQ</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Three.js Animation Canvas -->
+        <div id="hero-canvas-container"></div>
+
+        <span class="hero-badge">Open Problem #1</span>
+        <h1>Mandrake Open Problems #1:<br><span class="gradient">The Retroviral Wall</span></h1>
+        <p class="hero-subtitle">
+            Can you predict which reverse transcriptases work for prime editing — without memorizing their evolutionary family?
+        </p>
+
+        <!-- Countdown Timer -->
+        <div class="countdown-container" id="countdown">
+            <div class="countdown-item">
+                <span class="countdown-value" data-days>--</span>
+                <span class="countdown-label">Days</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-value" data-hours>--</span>
+                <span class="countdown-label">Hours</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-value" data-minutes>--</span>
+                <span class="countdown-label">Minutes</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-value" data-seconds>--</span>
+                <span class="countdown-label">Seconds</span>
+            </div>
+        </div>
+
+        <!-- CTAs -->
+        <div class="cta-group">
+            <a href="https://github.com/Mandrake-Bioworks/Retroviral-Wall-Challenge" target="_blank" rel="noopener" class="btn btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                View on GitHub
+            </a>
+            <a href="mailto:challenges@mandrakebio.com?subject=Retroviral%20Wall%20Challenge%20Submission" class="btn btn-secondary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                Submit via Email
+            </a>
+        </div>
+    </section>
+
+    <!-- The Challenge Section -->
+    <section class="section section-divider" id="challenge">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">The Challenge</span>
+                <h2 class="section-title">Prime Editing's Bottleneck</h2>
+            </div>
+
+            <!-- Prime Editing Explanation -->
+            <div class="challenge-intro" style="max-width: 900px; margin: 0 auto 2.5rem; text-align: center;">
+                <p style="font-size: 1.2rem; color: var(--text-secondary); line-height: 1.9;">
+                    Prime editing is arguably <strong style="color: var(--white);">the most precise genome editing technology ever built</strong>. It can write any of the 12 possible point mutations, make small insertions and deletions, and do it all without double-strand breaks or donor DNA templates. Where earlier CRISPR tools cut and hope, prime editing writes exactly what you want. It has the potential to correct the majority of known pathogenic mutations in the human genome.
+                </p>
+            </div>
+
+            <!-- The Bottleneck -->
+            <div class="highlight-box" style="margin-bottom: 2.5rem; border-left-color: var(--warning-orange);">
+                <p style="font-size: 1.1rem;">
+                    <strong style="color: var(--warning-orange);">But prime editing has a bottleneck — and it's biological, not computational.</strong>
+                </p>
+                <p style="margin-top: 1rem;">
+                    At the heart of every prime editor is a <strong>reverse transcriptase (RT)</strong> enzyme that reads an RNA template and writes the desired edit into DNA. The RT determines whether the edit works, how efficiently it works, and in which cell types it works. Today's best prime editors use MMLV-derived RTs — large enzymes (~700 amino acids) that are difficult to package into viral delivery vectors and challenging to deliver therapeutically. <strong style="color: var(--white);">Smaller, more efficient RTs would unlock prime editing for a far wider range of applications.</strong>
+                </p>
+            </div>
+
+            <div class="challenge-grid">
+                <div class="challenge-card">
+                    <h4>The Dry-Lab to Wet-Lab Loop</h4>
+                    <p>
+                        Nature has evolved thousands of RTs across retroviruses, bacteria, and mobile genetic elements. Some will work for prime editing. Most won't. Experimentally screening candidates is expensive and slow — each round takes months of cloning, expression, and activity measurement. <strong>Every candidate you can eliminate computationally is a month saved at the bench.</strong>
+                    </p>
+                </div>
+                <div class="challenge-card">
+                    <h4>No Universal Objective</h4>
+                    <p>
+                        Unlike antibody engineering, where binding affinity provides a single, well-defined metric to optimise against, enzyme function has no universal objective. An RT that works for prime editing must satisfy multiple constraints simultaneously — catalytic efficiency, processivity, fidelity, thermostability, structural compatibility with the Cas9 fusion, and more.
+                    </p>
+                </div>
+            </div>
+
+            <div class="challenge-grid" style="margin-top: 1.5rem;">
+                <div class="challenge-card">
+                    <h4>The ML Trap</h4>
+                    <p>
+                        The 57 experimentally tested RTs in this dataset come from 7 evolutionary families, and activity is heavily confounded with family membership. Models that achieve high accuracy are often just memorising <em>"Retroviral = active"</em> rather than learning the underlying biophysics. When tested on a held-out evolutionary family, they collapse.
+                    </p>
+                </div>
+                <div class="challenge-card" style="border-color: var(--accent-green); background: linear-gradient(135deg, rgba(0, 212, 170, 0.05) 0%, var(--bg-card) 100%);">
+                    <h4 style="color: var(--accent-green);">The Retroviral Wall</h4>
+                    <p>
+                        In leave-one-family-out evaluation, predicting activity for the Retroviral family — the most important family, containing the majority of known active RTs — is nearly impossible from patterns learned on other families. <strong style="color: var(--accent-green);">Breaking through this wall would be a meaningful advance in computational biology and protein engineering.</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- What We're Providing -->
+            <div class="section-header" style="margin-top: 3rem;">
+                <h3 class="section-title" style="font-size: 1.5rem;">What We're Providing</h3>
+            </div>
+
+            <div class="challenge-intro" style="max-width: 900px; margin: 0 auto 2rem; text-align: center;">
+                <p style="font-size: 1.05rem; color: var(--text-secondary); line-height: 1.8;">
+                    This dataset goes beyond raw activity labels. We've enriched every RT using our computational platform to maximise the signal available from 57 experimentally tested enzymes:
+                </p>
+            </div>
+
+            <div class="challenge-grid">
+                <div class="challenge-card">
+                    <h4>98 Biophysical Features</h4>
+                    <p>
+                        Spanning thermostability, catalytic geometry, surface charge, solubility, structural contacts, and more — signals that go beyond sequence alone.
+                    </p>
+                </div>
+                <div class="challenge-card">
+                    <h4>ESM-2 Embeddings</h4>
+                    <p>
+                        1280-dimensional protein language model embeddings for every RT, capturing evolutionary and structural patterns.
+                    </p>
+                </div>
+            </div>
+
+            <div class="challenge-grid" style="margin-top: 1.5rem;">
+                <div class="challenge-card">
+                    <h4>Predicted 3D Structures</h4>
+                    <p>
+                        ESMFold-predicted structures for all 57 enzymes in PDB format, ready for structural analysis and featurisation.
+                    </p>
+                </div>
+                <div class="challenge-card">
+                    <h4>Full Sequences & Annotations</h4>
+                    <p>
+                        Complete amino acid sequences and evolutionary family annotations. Use any additional tools, models, or databases you like.
+                    </p>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 2rem;">
+                <p style="text-align: center; font-size: 1.1rem;">
+                    <strong>The signal is in this dataset. The question is whether you can find it.</strong><br>
+                    <span style="color: var(--text-muted); font-size: 0.95rem;">We'll provide compute credits for compelling ideas that need GPU resources to execute.</span>
+                </p>
+            </div>
+
+            <div class="section-header" style="margin-top: 3rem;">
+                <h3 class="section-title" style="font-size: 1.5rem;">RT Family Breakdown</h3>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Family</th>
+                            <th>Total</th>
+                            <th>Active</th>
+                            <th>Inactive</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Retroviral</td>
+                            <td>18</td>
+                            <td class="active">12</td>
+                            <td class="inactive">6</td>
+                        </tr>
+                        <tr>
+                            <td>Retron</td>
+                            <td>11</td>
+                            <td class="active">4</td>
+                            <td class="inactive">7</td>
+                        </tr>
+                        <tr>
+                            <td>LTR Retrotransposon</td>
+                            <td>9</td>
+                            <td class="active">3</td>
+                            <td class="inactive">6</td>
+                        </tr>
+                        <tr>
+                            <td>Group II Intron</td>
+                            <td>10</td>
+                            <td class="active">4</td>
+                            <td class="inactive">6</td>
+                        </tr>
+                        <tr>
+                            <td>CRISPR-associated</td>
+                            <td>3</td>
+                            <td class="active">0</td>
+                            <td class="inactive">3</td>
+                        </tr>
+                        <tr>
+                            <td>Other</td>
+                            <td>4</td>
+                            <td class="active">0</td>
+                            <td class="inactive">4</td>
+                        </tr>
+                        <tr>
+                            <td>Unclassified</td>
+                            <td>2</td>
+                            <td class="active">0</td>
+                            <td class="inactive">2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 1.5rem;">
+                <p>
+                    <strong>Your Goal:</strong> Build a model that predicts RT activity based on sequence, structure, or biophysical properties — not family membership. We evaluate using Leave-One-Family-Out (LOFO) cross-validation to ensure your model learns generalizable biology, not shortcuts.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prizes Section -->
+    <section class="section section-divider" id="prizes">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">What You Win</span>
+                <h2 class="section-title">Prizes & Benefits</h2>
+            </div>
+
+            <div class="challenge-grid">
+                <!-- Card 1: Cash Prize -->
+                <div class="card prize-card">
+                    <div class="prize-amount">$1,000 USD</div>
+                    <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 1.5rem;">For the winning submission</p>
+                    <ul class="prize-list">
+                        <li>Stage 2 validation on Mandrake's proprietary experimental data</li>
+                        <li>Recognition on our website, GitHub, and social channels</li>
+                    </ul>
+                </div>
+
+                <!-- Card 2: Work With Us (The Real Draw) -->
+                <div class="card prize-card" style="border-color: var(--accent-green); background: linear-gradient(135deg, rgba(0, 212, 170, 0.08) 0%, var(--bg-card) 100%);">
+                    <div class="prize-amount accent-green">Make Life Programmable</div>
+                    <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 1.5rem; font-style: italic;">The real prize isn't the cash</p>
+                    <ul class="prize-list">
+                        <li>Paid research collaborations on active Mandrake projects</li>
+                        <li>Full-time roles for outstanding candidates</li>
+                        <li>Work on problems where your models get validated in a real lab</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Compute Credits Banner -->
+            <div class="highlight-box" style="margin-top: 2rem; border-left-color: var(--accent-cyan);">
+                <p style="text-align: center;">
+                    <strong style="color: var(--accent-cyan);">Compute Credits:</strong> Have a compelling idea but need GPU resources to execute? Email us your proposed approach. We fund compute on a case-by-case basis for ideas we find promising.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Mandrake Section -->
+    <section class="section section-divider" id="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">About Us</span>
+                <h2 class="section-title">About Mandrake Bioworks</h2>
+            </div>
+
+            <div class="about-content" style="max-width: 1000px; margin: 0 auto;">
+                <p style="font-size: 1.2rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 2rem; text-align: center;">
+                    <strong style="color: var(--accent-cyan);">Mandrake Bioworks</strong> is an AI-first gene editing company based in Bangalore, India. We use the best tools of today to build the best gene editing tools of tomorrow — and make biology truly programmable at scale.
+                </p>
+
+                <!-- Backed By Section -->
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <p style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">Backed By</p>
+                    <div class="logo-carousel-wrapper">
+                        <div class="logo-carousel">
+                            <!-- First set of logos -->
+                            <div class="logo-item">
+                                <img src="../Logos/Nvidia Inception.png" alt="NVIDIA Inception" title="NVIDIA Inception">
+                            </div>
+                            <div class="logo-item">
+                                <img src="../Logos/Microsoft-For-Startups-logo-400x200-1.webp" alt="Microsoft for Startups" title="Microsoft for Startups">
+                            </div>
+                            <div class="logo-item">
+                                <img src="../Logos/Google for statups.png" alt="Google for Startups" title="Google for Startups">
+                            </div>
+                            <div class="logo-item">
+                                <img src="../Logos/aws-n.png" alt="AWS" title="Amazon Web Services">
+                            </div>
+                            <div class="logo-item">
+                                <img src="../Logos/nebius logo.jpg" alt="Nebius" title="Nebius">
+                            </div>
+                            <div class="logo-item">
+                                <img src="../Logos/mercatus-social-media.webp" alt="Mercatus Centre" title="Mercatus Centre">
+                            </div>
+                            <div class="logo-item">
+                                <img src="../Logos/upsurgelabs_logo.jpg" alt="Upsurge Labs" title="Upsurge Labs">
+                            </div>
+                            <!-- Duplicate set for seamless loop -->
+                            <div class="logo-item">
+                                <img src="../Logos/Nvidia Inception.png" alt="NVIDIA Inception" title="NVIDIA Inception">
+                            </div>
+                            <div class="logo-item">
+                                <img src="../Logos/Microsoft-For-Startups-logo-400x200-1.webp" alt="Microsoft for Startups" title="Microsoft for Startups">
+                            </div>
+                            <div class="logo-item">
+                                <img src="../Logos/Google for statups.png" alt="Google for Startups" title="Google for Startups">
+                            </div>
+                            <div class="logo-item">
+                                <img src="../Logos/aws-n.png" alt="AWS" title="Amazon Web Services">
+                            </div>
+                            <div class="logo-item">
+                                <img src="../Logos/nebius logo.jpg" alt="Nebius" title="Nebius">
+                            </div>
+                            <div class="logo-item">
+                                <img src="../Logos/mercatus-social-media.webp" alt="Mercatus Centre" title="Mercatus Centre">
+                            </div>
+                            <div class="logo-item">
+                                <img src="../Logos/upsurgelabs_logo.jpg" alt="Upsurge Labs" title="Upsurge Labs">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="challenge-grid">
+                    <div class="challenge-card">
+                        <h4>Why Open Challenges?</h4>
+                        <p>
+                            The hardest problems in biology won't be solved by one team alone. A physicist, a self-taught ML engineer, or a grad student halfway across the world might see the pattern we missed. We're opening our hardest problems to find out.
+                        </p>
+                    </div>
+                    <div class="challenge-card">
+                        <h4>What Happens After?</h4>
+                        <p>
+                            This isn't a one-off competition. Winning approaches will be validated on real experimental data from our lab. Top performers join us — through paid collaborations or full-time roles — to work on the next set of problems. This is how we build the team.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Team Section -->
+                <div style="margin-top: 3rem; text-align: center;">
+                    <p style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">Our Team Comes From</p>
+                    <div class="logo-grid">
+                        <div class="logo-item">
+                            <img src="../Logos/icarlogo.gif" alt="ICAR" title="ICAR">
+                        </div>
+                        <div class="logo-item">
+                            <img src="../Logos/BITS_Pilani-Logo.svg.png" alt="BITS Pilani" title="BITS Pilani">
+                        </div>
+                        <div class="logo-item">
+                            <img src="../Logos/IIT_Madras_Logo.svg.png" alt="IIT Madras" title="IIT Madras">
+                        </div>
+                        <div class="logo-item">
+                            <img src="../Logos/IIIT_Hyderabad_Logo-e1655116937986.jpg" alt="IIIT Hyderabad" title="IIIT Hyderabad">
+                        </div>
+                        <div class="logo-item">
+                            <img src="../Logos/UCSF-Emblem.png" alt="UCSF" title="UCSF">
+                        </div>
+                        <div class="logo-item">
+                            <img src="../Logos/university-of-southampton-vector-logo-2022.png" alt="University of Southampton" title="University of Southampton">
+                        </div>
+                        <div class="logo-item">
+                            <img src="../Logos/lossfunk-logo.jpg" alt="Lossfunk" title="Lossfunk">
+                        </div>
+                        <div class="logo-item">
+                            <img src="../Logos/IIT-BHU_Logo.svg.png" alt="IIT BHU" title="IIT BHU">
+                        </div>
+                        <div class="logo-item">
+                            <img src="../Logos/MastersUnion_Logo_Facebook.png" alt="Masters Union" title="Masters Union">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 2.5rem; text-align: center;">
+                    <p>
+                        <strong>Our mission:</strong> Build the gene editing infrastructure the world needs. We believe the future of biology is computational — and we're hiring the people who will make it happen.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section section-divider" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">How It Works</span>
+                <h2 class="section-title">5 Steps to Compete</h2>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item animate-on-scroll">
+                    <div class="timeline-number">1</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Download the Dataset</h3>
+                        <p class="timeline-description">Get the RT sequences, activity labels, enriched biophysical features, and evaluation scripts from our GitHub repository.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item animate-on-scroll">
+                    <div class="timeline-number">2</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Build Your Model</h3>
+                        <p class="timeline-description">Use any approach: sequence embeddings, structural features, language models, or novel methods. Creativity is encouraged.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item animate-on-scroll">
+                    <div class="timeline-number">3</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Submit by March 31, 2026</h3>
+                        <p class="timeline-description">Email your code, predictions CSV, and a 1-2 page writeup explaining your approach to challenges@mandrakebio.com.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item animate-on-scroll">
+                    <div class="timeline-number">4</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Finalists Announced — April 2026</h3>
+                        <p class="timeline-description">Top submissions selected based on reproducible performance and methodological novelty.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item animate-on-scroll">
+                    <div class="timeline-number">5</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Winner Validated — Q2 2026</h3>
+                        <p class="timeline-description">Finalist approaches will be run on Mandrake's proprietary experimental data. The winner will be determined by real-world generalization.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rules Section -->
+    <section class="section section-divider" id="rules">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Rules</span>
+                <h2 class="section-title">Challenge Guidelines</h2>
+            </div>
+
+            <div class="card">
+                <ul class="rules-list">
+                    <li>
+                        <span class="rule-bullet"></span>
+                        <div>
+                            <strong>Open Worldwide</strong> — Individuals and teams welcome, regardless of location or affiliation.
+                        </div>
+                    </li>
+                    <li>
+                        <span class="rule-bullet"></span>
+                        <div>
+                            <strong>One Submission Per Team</strong> — Submit your best approach. You may update your submission before the deadline.
+                        </div>
+                    </li>
+                    <li>
+                        <span class="rule-bullet"></span>
+                        <div>
+                            <strong>Reproducibility Required</strong> — We will run your code independently. If we can't reproduce your results, the submission is disqualified.
+                        </div>
+                    </li>
+                    <li>
+                        <span class="rule-bullet"></span>
+                        <div>
+                            <strong>External Data Allowed</strong> — Use any datasets, pre-trained models, or tools you want. Document all sources in your writeup.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section section-divider" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">FAQ</span>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Can I use LLMs or foundation models?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Yes, absolutely. You can use protein language models (ESM, ProtTrans, etc.), general LLMs, or any other foundation model. We encourage creative use of modern ML tools. Just document what you use and how.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Do I need biology expertise?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>No, biology expertise is not required. This is primarily a machine learning problem. That said, understanding reverse transcriptases and prime editing may help you develop better features or approaches. We provide background materials in the GitHub repo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What happens to my code after submission?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>You retain full ownership of your code. The winning submission will be open-sourced under MIT license as part of the prize terms — meaning it becomes publicly available, but you remain the author and owner. Non-winning submissions are not published or shared.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Can I collaborate with others?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Yes, teams are welcome. There's no limit on team size. Just submit under a single team name and list all contributors. The prize will be awarded to the team, and distribution is your responsibility.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How do you prevent overfitting?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>We use two mechanisms: (1) Leave-One-Family-Out cross-validation in Stage 1, which tests generalization across evolutionary families, and (2) Stage 2 validation on proprietary experimental data that has never been public. This ensures winning models truly generalize.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <a href="https://mandrakebioworks.com" class="footer-logo">
+                    <img src="../assets/Logo Gradient 2 [PNG].png" alt="Mandrake Bioworks">
+                </a>
+
+                <div class="footer-links">
+                    <a href="https://github.com/Mandrake-Bioworks/Retroviral-Wall-Challenge" target="_blank" rel="noopener" class="footer-link">GitHub Repository</a>
+                    <a href="https://mandrakebioworks.com" target="_blank" rel="noopener" class="footer-link">mandrakebio.com</a>
+                    <a href="https://www.nature.com/articles/s41587-021-01039-7" target="_blank" rel="noopener" class="footer-link">Doman et al. Paper</a>
+                    <a href="mailto:challenges@mandrakebio.com" class="footer-link">challenges@mandrakebio.com</a>
+                </div>
+
+                <p class="footer-tagline">Building the gene editing infrastructure humanity deserves. From India, for the world.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../shared/challenges.js"></script>
+    <script>
+        // Initialize countdown to March 31, 2026, 23:59:59 UTC
+        document.addEventListener('DOMContentLoaded', function() {
+            initCountdown('2026-03-31T23:59:59Z', 'countdown');
+        });
+    </script>
+
+    <!-- Three.js Hero Animation -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        // Only initialize if container exists
+        const container = document.getElementById('hero-canvas-container');
+        if (container) {
+            // ENGINE & SCENE SETUP
+            const scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x0f0e1d, 0.025);
+
+            const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
+            camera.position.set(0, 0, 22);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance", alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setClearColor(0x0f0e1d, 0);
+            container.appendChild(renderer.domElement);
+
+            // BLOOM POST-PROCESSING
+            const composer = new EffectComposer(renderer);
+            composer.addPass(new RenderPass(scene, camera));
+            const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.8, 0.4, 0.85);
+            bloomPass.threshold = 0.15; bloomPass.strength = 1.2; bloomPass.radius = 0.5;
+            composer.addPass(bloomPass);
+
+            // COLOR PALETTE & MATERIALS
+            const c = { teal: 0x90dcd8, darkTeal: 0x4A7C8C, red: 0xFF6B6B, green: 0x00D4AA, rna: 0x9B59B6 };
+
+            const matDNA = new THREE.MeshStandardMaterial({ color: c.teal, emissive: c.darkTeal, emissiveIntensity: 0.2, roughness: 0.3 });
+            const matTarget = new THREE.MeshStandardMaterial({ color: c.red, emissive: c.red, emissiveIntensity: 0.8, roughness: 0.3 });
+            const matEdited = new THREE.MeshStandardMaterial({ color: c.green, emissive: c.green, emissiveIntensity: 0.8, roughness: 0.3 });
+
+            // PROCEDURAL DNA HELIX
+            const dnaGroup = new THREE.Group();
+            const basePairs = 45;
+            const spacing = 0.9;
+            const targetBases = [];
+
+            const geoSphere = new THREE.SphereGeometry(0.3, 16, 16);
+            const geoCyl = new THREE.CylinderGeometry(0.08, 0.08, 3, 8);
+
+            for(let i = 0; i < basePairs; i++) {
+                const y = (i - basePairs/2) * spacing;
+                const angle = i * 0.45;
+                const isTarget = i >= 20 && i <= 24;
+                const mat = isTarget ? matTarget : matDNA;
+
+                const b1 = new THREE.Mesh(geoSphere, mat);
+                b1.position.set(Math.cos(angle)*1.5, y, Math.sin(angle)*1.5);
+
+                const b2 = new THREE.Mesh(geoSphere, mat);
+                b2.position.set(Math.cos(angle+Math.PI)*1.5, y, Math.sin(angle+Math.PI)*1.5);
+
+                const rung = new THREE.Mesh(geoCyl, mat);
+                rung.position.set(0, y, 0);
+                rung.rotation.z = Math.PI/2;
+                rung.rotation.y = -angle;
+
+                dnaGroup.add(b1, b2, rung);
+                if(isTarget) targetBases.push({ b1, b2, rung, originalMat: mat });
+            }
+            dnaGroup.rotation.z = Math.PI/8;
+            scene.add(dnaGroup);
+
+            // PRIME EDITOR COMPLEX
+            const editorGroup = new THREE.Group();
+
+            const cas9 = new THREE.Mesh(
+                new THREE.IcosahedronGeometry(1.8, 2),
+                new THREE.MeshPhysicalMaterial({ color: 0xffffff, transmission: 0.7, opacity: 1, transparent: true, roughness: 0.1, ior: 1.5 })
+            );
+
+            const rtMat = new THREE.MeshStandardMaterial({ color: c.green, emissive: c.green, emissiveIntensity: 0.2 });
+            const rt = new THREE.Mesh(new THREE.CapsuleGeometry(0.6, 1.2, 16, 16), rtMat);
+            rt.position.set(1.5, -1, 0.8);
+            rt.rotation.z = Math.PI/4;
+
+            const rtLight = new THREE.PointLight(c.green, 0, 15);
+            rt.add(rtLight);
+
+            const curve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(0,0,0), new THREE.Vector3(2,-2,1), new THREE.Vector3(1,-5,2));
+            const rna = new THREE.Mesh(new THREE.TubeGeometry(curve, 20, 0.15, 8, false), new THREE.MeshStandardMaterial({ color: c.rna, emissive: c.rna, emissiveIntensity: 0.5 }));
+
+            editorGroup.add(cas9, rt, rna);
+            scene.add(editorGroup);
+
+            // AMBIENT PARTICLES
+            const pGeo = new THREE.BufferGeometry();
+            const pPos = new Float32Array(400 * 3);
+            for(let i=0; i<1200; i++) pPos[i] = (Math.random()-0.5)*50;
+            pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+            const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: c.teal, size: 0.1, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending }));
+            scene.add(particles);
+
+            // Scene 6: ML Target Variants
+            const variants = new THREE.Group();
+            for(let i=0; i<12; i++) {
+                const isG = Math.random() > 0.5;
+                const col = isG ? c.green : c.red;
+                const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 16), new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 1 }));
+                mesh.position.set((Math.random()-0.5)*30, (Math.random()-0.5)*20, (Math.random()-0.5)*10 - 5);
+                mesh.scale.set(0,0,0);
+                variants.add(mesh);
+            }
+            scene.add(variants);
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+            dirLight.position.set(5, 10, 5);
+            scene.add(dirLight);
+
+            // ANIMATION
+            const clock = new THREE.Clock();
+            let mouseX = 0, mouseY = 0;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                const time = clock.getElapsedTime();
+                const t = time % 20;
+
+                // Continuous Ambient Physics
+                dnaGroup.rotation.y = time * 0.15;
+                particles.rotation.y = time * 0.05;
+                particles.position.y = Math.sin(time * 0.5) * 0.5;
+
+                // Camera Parallax
+                camera.position.x += (mouseX * 3 - camera.position.x) * 0.05;
+                camera.position.y += (mouseY * 3 - camera.position.y) * 0.05;
+                camera.lookAt(0,0,0);
+
+                // TIMELINE LOGIC
+                if(t < 3) {
+                    targetBases.forEach(b => { b.b1.material = matTarget; b.b2.material = matTarget; b.rung.material = matTarget; });
+                    editorGroup.position.lerp(new THREE.Vector3(15, 10, -10), 0.1);
+                    rtMat.emissiveIntensity = 0.2; rtLight.intensity = 0;
+                    variants.children.forEach(v => v.scale.lerp(new THREE.Vector3(0,0,0), 0.1));
+                    dnaGroup.position.y = THREE.MathUtils.lerp(dnaGroup.position.y, 0, 0.1);
+                }
+                else if(t < 7) {
+                    editorGroup.position.lerp(new THREE.Vector3(2.5, 0, 2), 0.03);
+                }
+                else if(t < 10) {
+                    editorGroup.position.lerp(new THREE.Vector3(1.5, 0, 1.2), 0.05);
+                    editorGroup.rotation.z = Math.sin(time * 10) * 0.02;
+                }
+                else if(t < 14) {
+                    editorGroup.rotation.z = 0;
+                    editorGroup.position.y = THREE.MathUtils.lerp(editorGroup.position.y, -2, 0.05);
+
+                    const pulse = (Math.sin(time * 15) + 1) / 2;
+                    rtMat.emissiveIntensity = 1 + pulse * 2;
+                    rtLight.intensity = 2 + pulse * 2;
+
+                    if(t > 11) {
+                        const editIdx = Math.floor((t - 11) / 3 * targetBases.length);
+                        for(let i=0; i<=editIdx && i<targetBases.length; i++) {
+                            targetBases[i].b1.material = matEdited;
+                            targetBases[i].b2.material = matEdited;
+                            targetBases[i].rung.material = matEdited;
+                        }
+                    }
+                }
+                else if(t < 18) {
+                    rtMat.emissiveIntensity = THREE.MathUtils.lerp(rtMat.emissiveIntensity, 0.2, 0.1);
+                    rtLight.intensity = THREE.MathUtils.lerp(rtLight.intensity, 0, 0.1);
+                    editorGroup.position.lerp(new THREE.Vector3(-15, -5, -5), 0.02);
+                }
+                else {
+                    variants.children.forEach(v => {
+                        v.scale.lerp(new THREE.Vector3(1,1,1), 0.05);
+                        v.position.y += Math.sin(time*3)*0.01;
+                    });
+                    dnaGroup.position.y = THREE.MathUtils.lerp(dnaGroup.position.y, -spacing * 5, 0.02);
+                }
+
+                composer.render();
+            }
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth/window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                composer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            animate();
+        }
+    </script>
+</body>
+</html>
