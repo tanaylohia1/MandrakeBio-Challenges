@@ -129,12 +129,13 @@ function initScrollAnimations() {
 
 // AIDEV-SECTION: Navigation
 /**
- * Handle navigation scroll behavior
+ * Handle navigation scroll behavior and hamburger menu
  */
 function initNavigation() {
     const nav = document.querySelector('.nav-header');
     if (!nav) return;
 
+    // Scroll behavior
     let lastScroll = 0;
 
     window.addEventListener('scroll', () => {
@@ -147,6 +148,72 @@ function initNavigation() {
         }
 
         lastScroll = currentScroll;
+    });
+
+    // Hamburger menu
+    initHamburgerMenu();
+}
+
+/**
+ * Initialize hamburger menu functionality
+ */
+function initHamburgerMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (!hamburger || !navLinks) return;
+
+    // Create overlay element
+    let overlay = document.querySelector('.nav-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'nav-overlay';
+        document.body.appendChild(overlay);
+    }
+
+    // Toggle menu
+    function toggleMenu() {
+        const isOpen = hamburger.classList.contains('active');
+
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        overlay.classList.toggle('active');
+        hamburger.setAttribute('aria-expanded', !isOpen);
+
+        // Prevent body scroll when menu is open
+        document.body.style.overflow = isOpen ? '' : 'hidden';
+    }
+
+    // Close menu
+    function closeMenu() {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        overlay.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+
+    // Event listeners
+    hamburger.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', closeMenu);
+
+    // Close menu when clicking a nav link
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && hamburger.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+
+    // Close menu on resize if wider than mobile breakpoint
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && hamburger.classList.contains('active')) {
+            closeMenu();
+        }
     });
 }
 
