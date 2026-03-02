@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/Retroviral_Wall_Challenge/$1"
+    }
+  ]
+}
